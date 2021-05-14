@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express', autor: 'jesus samuel',jesus: 'jesus',  compañia: 'Awsome software'});
+  res.render('index', { title: 'Express', autor: 'jesus samuel vazquez',jesus: 'jesus',  compañia: 'Awsome software'});
 });
 
 /* codigo nuevo. */
