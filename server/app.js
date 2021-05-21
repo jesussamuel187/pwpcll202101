@@ -6,8 +6,37 @@
  
 import indexRouter from '@s-routes/index';
 import usersRouter from '@s-routes/users';
-
+// webpack modules 
+import webpack from 'webpack';
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import webpackHotMidddleware from 'webpack-hot-middleware';
+import webpackConfig, { plugins } from '../webpack.dev.config';
+import webpackDevConfig from '../webpack.dev.config';
+//consultar el modo en que se este ejecutando la aplicacion.
+const env = process.env.NODE_ENV || 'developement';
+//se crea la aplicacion express
 var app = express();
+//verificando el modo de ejecucion de la aplicacion
+if(env === 'development'){
+  console.log('> Excecuting int Development Mode : Webpack Hot Reloading');
+  //paso 1 agregando la ruta del HMR
+  //reload = true: habilita la recarga del front end cuando hay cambios en el codigo fuente del front end
+  //timeout = mil: tiempo de espera entre recarga y recarga de la paguina
+  webpackConfig.entry = ['webpack-hot-middleware/client?reload=true&timeout=mil',webpackConfig.entry];
+
+//paso 2 agregamos el plugin 
+webpackConfig,plugins.push(new webpack.HotModuleReplacementPlugin());
+//paso 3 crear el compilador de webpack
+const compiler = webpack(webpackConfig);
+//paso 4 agregando el middleware ala cadena de middlewares de nuestra aplicacion
+app.use(webpackDevMiddleware(compiler,{
+  publicPath: webpackDevConfig.output.publicPath
+}));
+//paso 5 agregando el webpack hot middleware
+app.use(webpackHotMidddleware(compiler));
+} else{
+  console.log('> Excecuting int Production Mode...');   
+}
 
 // view engine setup       //(hbs= halderbals)
 app.set('views', path.join(__dirname, 'views'));

@@ -2,7 +2,7 @@ import './stylesheets/style.css'
 import './stylesheets/mystyles.css'
 console.log("Webpack Working!!!");
 //Default parameters ES6/2015
-let show = (m = "hola") => {
+let show = (m = "hot module replacement working") => {
     alert(m)
 };
 
