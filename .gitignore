@@ -1,3 +1,7 @@
 # ignorando las dependencias
 node_modules
 dist-server
+# ignorando los archivos de logs
+logs
+# con el *. nos referimos a todos los archivos que terminen en este caso con la extencion logs
+*.logs      

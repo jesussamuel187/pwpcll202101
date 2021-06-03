@@ -3,7 +3,8 @@ import createError from 'http-errors';
 import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
-import logger from 'morgan';
+import morgan from 'morgan';
+import winston from 'winston';
 
 import indexRouter from '@s-routes/index';
 import usersRouter from '@s-routes/users';
@@ -52,7 +53,7 @@ if (env === 'development') {
 // view engine setup       //(hbs= halderbals)
 configTemplateEngine(app);
 
-app.use(logger('dev')); // es para que nos muestren las peticiones que hacen.
+app.use(morgan('combined',{stream : winston.stream})); // es para que nos muestren las peticiones que hacen.
 app.use(express.json()); // comvierte el http a formato json.(es un conversor )
 app.use(express.urlencoded({ extended: false })); // para todas las peticiones de url.
 app.use(cookieParser()); // manejo de cookies
