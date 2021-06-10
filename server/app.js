@@ -4,13 +4,13 @@ import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
-import winston from 'winston';
+import winston from '@server/config/winston';
 
 import indexRouter from '@s-routes/index';
 import usersRouter from '@s-routes/users';
 
 // importing configurations
-import configTemplateEngine from '@s-config/template-engine';
+import configTemplateEngine from '@s-config/template-engine'
 
 
 
@@ -53,7 +53,7 @@ if (env === 'development') {
 // view engine setup       //(hbs= halderbals)
 configTemplateEngine(app);
 
-app.use(morgan('combined',{stream : winston.stream})); // es para que nos muestren las peticiones que hacen.
+app.use(morgan('dev',{stream : winston.stream})); // es para que nos muestren las peticiones que hacen.
 app.use(express.json()); // comvierte el http a formato json.(es un conversor )
 app.use(express.urlencoded({ extended: false })); // para todas las peticiones de url.
 app.use(cookieParser()); // manejo de cookies
@@ -64,6 +64,10 @@ app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use( (req, res, next) => {
+  // log
+  winston.error(
+    `Code: 404, Message: Page Nod Found, URL: ${req.originalUrl}, Method: ${req.method}`,
+  );
   next(createError(404));
 });
 
@@ -72,6 +76,13 @@ app.use( (err, req, res) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // logeando con winston
+  winston.error(
+    `estatus: ${err.status || 500} Message: ${err.message} Method: ${
+      req.method
+    }, IP: ${req.ip}`
+  );
 
   // render the error page
   res.status(err.status || 500);
